@@ -38,7 +38,7 @@ body.dark .paper{background-color:#171b1d;background-image:radial-gradient(ellip
       <div class="zoom"><button id="zoomOut">−</button><strong id="zoomLabel">100%</strong><button id="zoomIn">+</button><button id="grid">Cuadrícula</button></div>
     </div>
     <div class="symbols" id="symbols"></div>
-    <div class="group" id="categories"><button class="category active" data-cat="basicos">Básicos</button><button class="category" data-cat="algebra">Álgebra</button><button class="category" data-cat="calculo">Cálculo</button><button class="category" data-cat="programacion">Programación</button></div>
+    <div class="group" id="categories"><button class="category active" data-cat="proposiciones">Proposiciones</button><button class="category" data-cat="basicos">Básicos</button><button class="category" data-cat="algebra">Álgebra</button><button class="category" data-cat="calculo">Cálculo</button><button class="category" data-cat="programacion">Programación</button></div>
   </section>
   <section class="workspace">
     <aside class="sidebar">
@@ -60,7 +60,7 @@ body.dark .paper{background-color:#171b1d;background-image:radial-gradient(ellip
 <script>
 (()=>{'use strict';
 const $=s=>document.querySelector(s), board=$('#board'),paper=$('#paper'),canvas=$('#canvas'),ctx=canvas.getContext('2d'),toast=$('#toast');
-const sets={basicos:['√','∈','∉','⊂','⊆','∪','∩','≤','≥','≠','∞','π','±','≈','∅','ℝ'],algebra:['x²','xⁿ','|x|','≡','∝','∆','Σ','∏','→','↔','∀','∃','∴','ℕ','ℤ','ℚ'],calculo:['∫','∬','∂','d/dx','lim','∞','∇','∆x','dy','dx','∑','′','″','→','±','e'],programacion:['←','→','⇒','&&','||','!','=','==','===','!=','≤','≥','%','{}','[]','()','λ']};
+const sets={proposiciones:['¬','∧','∨','→','↔'],basicos:['√','∈','∉','⊂','⊆','∪','∩','≤','≥','≠','∞','π','±','≈','∅','ℝ'],algebra:['x²','xⁿ','|x|','≡','∝','∆','Σ','∏','→','↔','∀','∃','∴','ℕ','ℤ','ℚ'],calculo:['∫','∬','∂','d/dx','lim','∞','∇','∆x','dy','dx','∑','′','″','→','±','e'],programacion:['←','→','⇒','&&','||','!','=','==','===','!=','≤','≥','%','{}','[]','()','λ']};
 let mode='text',zoom=1,drawing=false,last=null,history=[],future=[],saveTimer,currentExponent=null;
 function notify(t){toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1800)}
 function resizeCanvas(){const ratio=devicePixelRatio||1,w=paper.clientWidth,h=Math.max(paper.clientHeight,720),old=document.createElement('canvas');old.width=canvas.width;old.height=canvas.height;old.getContext('2d').drawImage(canvas,0,0);canvas.width=w*ratio;canvas.height=h*ratio;canvas.style.width=w+'px';canvas.style.height=h+'px';ctx.setTransform(ratio,0,0,ratio,0,0);if(old.width)ctx.drawImage(old,0,0,old.width,old.height,0,0,w,h)}
@@ -98,8 +98,9 @@ function setZoom(v){zoom=Math.max(.5,Math.min(1.6,v));paper.style.transform=`sca
 $('#print').onclick=()=>window.print();
 $('#png').onclick=()=>{const out=document.createElement('canvas'),w=paper.clientWidth,h=paper.clientHeight;out.width=w*2;out.height=h*2;const c=out.getContext('2d');c.scale(2,2);c.fillStyle=getComputedStyle(paper).backgroundColor;c.fillRect(0,0,w,h);if(paper.classList.contains('grid')){c.strokeStyle='#ffffff18';c.lineWidth=1;for(let x=0;x<w;x+=28){c.beginPath();c.moveTo(x,0);c.lineTo(x,h);c.stroke()}for(let y=0;y<h;y+=28){c.beginPath();c.moveTo(0,y);c.lineTo(w,y);c.stroke()}}c.fillStyle=getComputedStyle(board).color;c.font='24px Cambria Math';c.textBaseline='top';let y=46;const lines=board.innerText.split('\n');lines.forEach(line=>{const words=line.split(' ');let row='';words.forEach(word=>{const test=row?row+' '+word:word;if(c.measureText(test).width>w-96){c.fillText(row,48,y);y+=42;row=word}else row=test});c.fillText(row,48,y);y+=42});c.drawImage(canvas,0,0,w,h);const a=document.createElement('a');a.download='Tablero_Universitario_Ricky.png';a.href=out.toDataURL('image/png');a.click();notify('Imagen PNG guardada')};
 $('#penSize').oninput=e=>$('#sizeLabel').textContent=e.target.value;document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.key.toLowerCase()==='z'){e.preventDefault();doUndo()}if(e.ctrlKey&&e.key.toLowerCase()==='y'){e.preventDefault();doRedo()}});
-renderSymbols('basicos');resizeCanvas();history=[snapshot()];board.focus();window.addEventListener('resize',resizeCanvas);
+renderSymbols('proposiciones');resizeCanvas();history=[snapshot()];board.focus();window.addEventListener('resize',resizeCanvas);
 })();
 </script>
 </body>
 </html>
+
